@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PremoMax</title>
+    <style>
+        /* Ye hissa design (colors, boxes) ke liye hai */
+        body {
+            background-color: #f8f9fa;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            width: 350px;
+        }
+        .icon {
+            background-color: #0b1120;
+            color: #fbbf24;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 15px;
+            font-size: 18px;
+        }
+        h2 {
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+        p {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .input-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: bold;
+            color: #475569;
+            margin-bottom: 5px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            box-sizing: border-box;
+            background-color: #f8fafc;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #d97706; /* Ye aapki picture wala orange color hai */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #b45309;
+        }
+        .footer-text {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #64748b;
+        }
+        .footer-text a {
+            color: #0f172a;
+            font-weight: bold;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ye hissa screen par box aur text dikhane ke liye hai -->
+    <div class="login-box">
+        <div class="icon">🔒</div>
+        <h2>Welcome back</h2>
+        <p>Sign in to continue</p>
+
+        <div class="input-group">
+            <label>EMAIL</label>
+            <input type="email" placeholder="Enter your email" id="email">
+        </div>
+
+        <div class="input-group">
+            <label>PASSWORD</label>
+            <input type="password" placeholder="........" id="password">
+        </div>
+
+        <button class="btn" onclick="testLogin()">Sign in &rarr;</button>
+
+        <div class="footer-text">
+            Don't have an account? <a href="signup.html">Sign up</a>
+        </div>
+    </div>
+
+    <!-- Ye hissa functions ke liye hai jo hum baad mein Supabase se jorenge -->
+    <script>
+        function testLogin() {
+            alert("Button kaam kar raha hai! Next step mein hum isay Supabase database se connect karenge.");
+        }
+    </script>
+
+</body>
+</html>
