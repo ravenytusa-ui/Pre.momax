@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verification - PremoMax</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            margin: 0;
+            padding: 20px 0;
+        }
+        .ver-box {
+            background-color: transparent;
+            width: 380px;
+            padding: 10px;
+        }
+        .header-text {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header-text h2 {
+            margin: 0 0 5px 0;
+            color: #1e293b;
+        }
+        .header-text p {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        /* Steps Design */
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .icon-green { color: #10b981; margin-right: 15px; font-size: 20px; }
+        .icon-orange { color: #f59e0b; margin-right: 15px; font-size: 20px; display: inline-block; }
+        .icon-gray { color: #cbd5e1; margin-right: 15px; font-size: 20px; }
+        
+        .text-green { color: #10b981; font-weight: bold; font-size: 15px; }
+        .text-black { color: #0f172a; font-weight: bold; font-size: 15px; }
+        .text-gray { color: #94a3b8; font-weight: bold; font-size: 15px; }
+        .sub-text { color: #64748b; font-size: 12px; display: block; margin-top: 3px; font-weight: normal; }
+
+        /* LOADING ANIMATION (Ghoomne ke liye) */
+        @keyframes spin-animation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spinning {
+            animation: spin-animation 1.5s linear infinite;
+        }
+
+        /* Progress Bar Design */
+        .progress-container {
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #64748b;
+        }
+        .progress-bar-bg {
+            background-color: #f1f5f9;
+            height: 8px;
+            border-radius: 10px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            background-color: #0f172a; 
+            height: 100%;
+            width: 65%;
+            border-radius: 10px;
+        }
+        /* Blue Info Message */
+        .info-msg {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        /* Buttons Design */
+        .btn-outline {
+            width: 100%;
+            padding: 12px;
+            background-color: white;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .btn-black {
+            width: 100%;
+            padding: 12px;
+            background-color: #111827;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ver-box">
+        <div class="header-text">
+            <h2>Verification in Progress</h2>
+            <p>Typically takes 15-30 minutes</p>
+        </div>
+
+        <div class="card">
+            <div class="step">
+                <div class="icon-green">✔</div>
+                <div><span class="text-green">Payment Received</span></div>
+            </div>
+            <div class="step">
+                <!-- Yahan "spinning" class add ki hai taake ye ghoome -->
+                <div class="icon-orange spinning">↻</div>
+                <div>
+                    <span class="text-black">Security Check</span>
+                    <span class="sub-text">In progress...</span>
+                </div>
+            </div>
+            <div class="step" style="margin-bottom: 0;">
+                <div class="icon-gray">✔</div>
+                <div><span class="text-gray">Account Activation</span></div>
+            </div>
+
+            <div class="progress-container">
+                <span>Progress</span>
+                <span style="color: #0f172a; font-weight: bold;">65%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <p style="font-size: 11px; color: #64748b; font-weight: bold; margin-top: 0;">TRANSACTION DETAILS</p>
+            <div style="display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 10px; color: #475569;">
+                <span>Transaction ID</span>
+                <!-- Yahan id lagai hai taake javascript data yahan daal sake -->
+                <span id="showTrxId" style="font-weight: bold; color: #0f172a;">Loading...</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 14px; color: #475569;">
+                <span>Time Elapsed</span>
+                <span style="font-weight: bold; color: #0f172a;">0 min</span>
+            </div>
+        </div>
+
+        <div class="info-msg">
+            Your payment is being verified. You'll receive an email notification once approved.
+        </div>
+
+        <button class="btn-outline" onclick="checkStatus()">↻ Check Status</button>
+        <button class="btn-black" onclick="signOut()">[→ Sign Out</button>
+
+    </div>
+
+    <script>
+        // Page load hotay hi ye function chalay ga
+        window.onload = function() {
+            // Memory se TRX ID nikalna
+            var savedTrx = localStorage.getItem("userTrx");
+            
+            // Agar id mili hai, to page par show kar do
+            if (savedTrx) {
+                document.getElementById("showTrxId").innerText = savedTrx;
+            } else {
+                document.getElementById("showTrxId").innerText = "Not Found";
+            }
+        }
+
+      function checkStatus() {
+            // Seedha dashboard par bhej do
+            window.location.href = "dashboard.html";
+        }
+
+        function signOut() {
+            window.location.href = "login.html";
+        }
+    </script>
+
+</body>
+</html>
