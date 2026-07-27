@@ -4,86 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deposit - PremoMax</title>
+    <!-- Supabase CDN Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #0f172a;
             font-family: sans-serif;
             display: flex;
             justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 20px 0;
         }
-        .deposit-box {
-            background-color: #ffffff;
-            width: 380px;
-            padding: 20px;
+        .deposit-card {
+            background: white;
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            width: 350px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        .header {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #1e293b;
-        }
-        /* SadaPay Card Design */
-        .payment-method {
-            background-color: #111827; /* Dark black/blue */
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .method-icon {
-            background-color: #fb923c; /* SadaPay orange touch */
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-        /* Info Cards */
-        .info-card {
-            border: 1px solid #e2e8f0;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        .flex-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-        .text-gray { color: #64748b; font-size: 12px; }
-        .text-bold { font-weight: bold; color: #0f172a; }
-        .amount-highlight {
-            background-color: #fffbeb;
-            border: 1px solid #fde68a;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-        .amount-highlight .text-bold {
-            color: #b45309;
-            font-size: 18px;
-        }
-        /* Form Section */
-        .form-section {
-            border: 1px solid #e2e8f0;
-            padding: 15px;
-            border-radius: 8px;
-        }
+        h2 { text-align: center; color: #0f172a; margin-bottom: 20px; }
         .input-group {
             margin-bottom: 15px;
         }
         .input-group label {
             display: block;
             font-size: 11px;
+            font-weight: bold;
             color: #64748b;
             margin-bottom: 5px;
         }
@@ -93,113 +40,71 @@
             border: 1px solid #cbd5e1;
             border-radius: 6px;
             box-sizing: border-box;
-            background-color: #f8fafc;
+            font-size: 14px;
         }
-        /* Button Styles */
         .btn {
             width: 100%;
             padding: 12px;
-            background-color: #111827; /* Dark Button */
+            background-color: #10b981;
             color: white;
             border: none;
             border-radius: 6px;
             font-weight: bold;
+            font-size: 15px;
             cursor: pointer;
             margin-top: 10px;
-            transition: 0.3s;
         }
-        /* Disable state jab tak details na dali hon */
-        .btn:disabled {
-            background-color: #94a3b8;
-            cursor: not-allowed;
-        }
+        .btn:hover { background-color: #059669; }
     </style>
 </head>
 <body>
 
-    <div class="deposit-box">
-        <div class="header">Payment</div>
-
-        <!-- SadaPay Header -->
-        <div class="payment-method">
-            <span class="method-icon">S</span> SadaPay
+    <div class="deposit-card">
+        <h2>Enter Transaction ID</h2>
+        
+        <div class="input-group">
+            <label>TRANSACTION ID / HASH</label>
+            <input type="text" placeholder="Enter your transaction ID" id="txnId">
         </div>
 
-        <!-- Amount to Pay -->
-        <div class="info-card">
-            <div class="flex-row">
-                <span class="text-gray">Amount to Pay</span>
-                <span class="text-bold" style="font-size: 16px;">520 PKR</span>
-            </div>
-            <div class="flex-row">
-                <span class="text-gray">Processing time</span>
-                <span class="text-gray">15-30 min</span>
-            </div>
-        </div>
-
-        <!-- Account Details -->
-        <div class="info-card">
-            <div class="text-gray">Account Name</div>
-            <div class="text-bold" style="margin-bottom: 10px;">Shameem Bibi</div>
-            
-            <div class="text-gray">Account Number</div>
-            <div class="text-bold">03405527120</div>
-
-            <div class="amount-highlight">
-                <div class="text-gray" style="color: #b45309;">Send Exactly</div>
-                <div class="text-bold">520 PKR</div>
-            </div>
-        </div>
-
-        <!-- Verification Form -->
-        <div class="form-section">
-            <div class="text-bold" style="margin-bottom: 15px;">Verify Payment</div>
-            
-            <div class="input-group">
-                <label>Transaction ID</label>
-                <input type="text" id="trxId" placeholder="Enter TRX ID" oninput="checkInputs()">
-            </div>
-
-            <div class="input-group">
-                <label>Sender Name</label>
-                <input type="text" id="senderName" placeholder="Account holder name" oninput="checkInputs()">
-            </div>
-
-            <div class="input-group">
-                <label>Phone Number</label>
-                <input type="tel" id="senderPhone" placeholder="Sender phone number" oninput="checkInputs()">
-            </div>
-
-            <button class="btn" id="confirmBtn" disabled onclick="submitPayment()">Confirm Payment</button>
-        </div>
+        <button class="btn" onclick="submitDeposit()">Submit Deposit &rarr;</button>
     </div>
 
     <script>
-        // Ye function check karta hai ke 3 boxes mein data hai ya nahi
-        function checkInputs() {
-            var trx = document.getElementById("trxId").value;
-            var name = document.getElementById("senderName").value;
-            var phone = document.getElementById("senderPhone").value;
-            var btn = document.getElementById("confirmBtn");
+        // Apni Supabase URL aur Publishable Key yahan dalein
+        const SUPABASE_URL = 'https://itbcliczvrezshhkdnj.supabase.co';
+        const SUPABASE_ANON_KEY = 'YAHAN_APNI_PUBLISHABLE_KEY_DALEN';
+        
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // Agar teeno boxes mein kuch likha hai, to button enable kar do
-            if (trx.trim() !== "" && name.trim() !== "" && phone.trim() !== "") {
-                btn.disabled = false;
+        async function submitDeposit() {
+            const txnId = document.getElementById('txnId').value.trim();
+            const userEmail = localStorage.getItem('userEmail');
+
+            if (!txnId) {
+                alert('Please enter your transaction ID!');
+                return;
+            }
+
+            if (!userEmail) {
+                alert('User session not found. Please sign up again.');
+                window.location.href = 'signup.html';
+                return;
+            }
+
+            // Database mein user ki email ke zariye transaction ID update karna
+            const { error } = await supabaseClient
+                .from('users')
+                .update({ transaction_id: txnId, status: 'pending' })
+                .eq('email', userEmail);
+
+            if (error) {
+                alert('Error: ' + error.message);
             } else {
-                btn.disabled = true; /* Warna disabled rakho */
+                alert('Deposit submitted successfully! Waiting for admin approval.');
+                window.location.href = 'dashboard.html';
             }
         }
-
-       // Jab button click hoga to next page par bhej dega
-        function submitPayment() {
-            // User ki likhi hui TRX ID ko uthao
-            var trx = document.getElementById("trxId").value;
-            // Usko browser ki temporary memory mein save kar lo
-            localStorage.setItem("userTrx", trx); 
-            // Phir verification page par jao
-            window.location.href = "verification.html";
-        }
     </script>
-
 </body>
 </html>
