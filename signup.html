@@ -4,43 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - PremoMax</title>
+    <!-- Supabase CDN Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #0f172a;
             font-family: sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Agar screen choti ho to scroll karne ke liye thora margin */
+            height: 100vh;
             margin: 0;
-            padding: 20px 0;
         }
-        .login-box {
-            background-color: white;
-            padding: 40px;
+        .signup-card {
+            background: white;
+            padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            text-align: center;
             width: 350px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-        h2 {
-            color: #1e293b;
-            margin-bottom: 5px;
-        }
-        p {
-            color: #64748b;
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
+        h2 { text-align: center; color: #0f172a; margin-bottom: 20px; }
         .input-group {
-            text-align: left;
             margin-bottom: 15px;
         }
         .input-group label {
             display: block;
             font-size: 11px;
             font-weight: bold;
-            color: #475569;
+            color: #64748b;
             margin-bottom: 5px;
         }
         .input-group input {
@@ -49,40 +40,35 @@
             border: 1px solid #cbd5e1;
             border-radius: 6px;
             box-sizing: border-box;
-            background-color: #f8fafc;
+            font-size: 14px;
         }
         .btn {
             width: 100%;
             padding: 12px;
-            background-color: #d97706; /* Orange button */
+            background-color: #f59e0b;
             color: white;
             border: none;
             border-radius: 6px;
             font-weight: bold;
+            font-size: 15px;
             cursor: pointer;
             margin-top: 10px;
         }
-        .btn:hover {
-            background-color: #b45309;
-        }
+        .btn:hover { background-color: #d97706; }
         .footer-text {
-            margin-top: 20px;
+            text-align: center;
+            margin-top: 15px;
             font-size: 13px;
             color: #64748b;
         }
-        .footer-text a {
-            color: #0f172a;
-            font-weight: bold;
-            text-decoration: none;
-        }
+        .footer-text a { color: #f59e0b; text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="login-box">
-        <h2>Create an Account</h2>
-        <p>Join us today</p>
-
+    <div class="signup-card">
+        <h2>Create Account</h2>
+        
         <div class="input-group">
             <label>FULL NAME</label>
             <input type="text" placeholder="Enter your full name" id="name">
@@ -100,36 +86,68 @@
 
         <div class="input-group">
             <label>PASSWORD</label>
-            <input type="password" placeholder="........" id="password">
+            <input type="password" placeholder="********" id="password">
         </div>
 
-        <div class="input-group">
-            <label>RE-TYPE PASSWORD</label>
-            <input type="password" placeholder="........" id="repassword">
-        </div>
-
-        <button class="btn" onclick="testSignup()">Sign Up &rarr;</button>
+        <button class="btn" onclick="handleSignup()">Sign Up &rarr;</button>
 
         <div class="footer-text">
             Already have an account? <a href="login.html">Sign in</a>
         </div>
     </div>
 
-  <script>
-    function testSignup() {
-        // User ka likha hua naam uthana
-        var userName = document.getElementById("name").value;
+    <script>
+        // Yahan apni Supabase Project ki URL aur Anon Key lagani hai
+        const SUPABASE_URL = 'APNI_SUPABASE_URL_YAHAN_DALEN';
+        const SUPABASE_ANON_KEY = 'APNI_SUPABASE_ANON_KEY_YAHAN_DALEN';
         
-        // Agar naam khali nahi hai to save kar lo
-        if (userName.trim() !== "") {
-            localStorage.setItem("savedUserName", userName);
-        } else {
-            localStorage.setItem("savedUserName", "User"); // Agar naam na likhe to default "User" rahe
-        }
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Ye line user ko direct deposit page par le jayegi
-        window.location.href = "deposit.html";
-    }
-</script>
+        async function handleSignup() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (!name || !email || !password) {
+                alert('Please fill in all required fields!');
+                return;
+            }
+
+            // Unique referral code banana (Jaise naam ka pehla hissa + random numbers)
+            const referralCode = name.toLowerCase().replace(/\s+/g, '') + Math.floor(1000 + Math.random() * 9000);
+            
+            // URL se check karna ke kya user kisi ke referral link se aaya hai?
+            const urlParams = new URLSearchParams(window.location.search);
+            const referredBy = urlParams.get('ref') || null;
+
+            // Data Supabase Database mein insert karna
+            const { data, error } = await supabaseClient
+                .from('users')
+                .insert([
+                    { 
+                        name: name, 
+                        email: email, 
+                        phone: phone, 
+                        password: password, 
+                        status: 'pending',
+                        referral_code: referralCode,
+                        referred_by: referredBy
+                    }
+                ]);
+
+            if (error) {
+                alert('Error: ' + error.message);
+            } else {
+                // Browser ki memory mein user ka naam aur code save kar lena dashboard ke liye
+                localStorage.setItem('savedUserName', name);
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userReferralCode', referralCode);
+
+                alert('Sign up successful! Please proceed to deposit.');
+                window.location.href = 'deposit.html';
+            }
+        }
+    </script>
 </body>
 </html>
