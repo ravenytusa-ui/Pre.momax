@@ -25,18 +25,18 @@
         }
         h2 { text-align: center; color: #0f172a; margin-bottom: 20px; }
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .input-group label {
             display: block;
             font-size: 11px;
             font-weight: bold;
             color: #64748b;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         .input-group input {
             width: 100%;
-            padding: 10px;
+            padding: 9px;
             border: 1px solid #cbd5e1;
             border-radius: 6px;
             box-sizing: border-box;
@@ -89,6 +89,11 @@
             <input type="password" placeholder="********" id="password">
         </div>
 
+        <div class="input-group">
+            <label>RE-TYPE PASSWORD</label>
+            <input type="password" placeholder="********" id="cpassword">
+        </div>
+
         <button class="btn" onclick="handleSignup()">Sign Up &rarr;</button>
 
         <div class="footer-text">
@@ -97,8 +102,8 @@
     </div>
 
     <script>
-        // Yahan apni Supabase Project ki URL aur Anon Key lagani hai
-        const SUPABASE_URL = 'https://itbcliczvrezshhkhdnj.supabase.co/rest/v1/';
+        // Supabase URL (Aakhir mein slash / nahi lagana) aur Publishable Key
+        const SUPABASE_URL = 'https://itbcliczvrezshhkdnj.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_SP2eboFIv_2oUqxkRsukhQ_C-Aft2Hq';
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -108,16 +113,22 @@
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
             const password = document.getElementById('password').value.trim();
+            const cpassword = document.getElementById('cpassword').value.trim();
 
-            if (!name || !email || !password) {
+            if (!name || !email || !password || !cpassword) {
                 alert('Please fill in all required fields!');
                 return;
             }
 
-            // Unique referral code banana (Jaise naam ka pehla hissa + random numbers)
+            if (password !== cpassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+
+            // Unique referral code banana
             const referralCode = name.toLowerCase().replace(/\s+/g, '') + Math.floor(1000 + Math.random() * 9000);
             
-            // URL se check karna ke kya user kisi ke referral link se aaya hai?
+            // URL se check karna ke kya user referral link se aaya hai?
             const urlParams = new URLSearchParams(window.location.search);
             const referredBy = urlParams.get('ref') || null;
 
@@ -139,7 +150,6 @@
             if (error) {
                 alert('Error: ' + error.message);
             } else {
-                // Browser ki memory mein user ka naam aur code save kar lena dashboard ke liye
                 localStorage.setItem('savedUserName', name);
                 localStorage.setItem('userEmail', email);
                 localStorage.setItem('userReferralCode', referralCode);
